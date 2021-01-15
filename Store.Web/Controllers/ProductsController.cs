@@ -67,17 +67,20 @@ namespace Store.Web.Controllers
 
                 if(view.ImageFile != null && view.ImageFile.Length > 0)
                 {
+                    var guid = Guid.NewGuid().ToString();
+                    var file = $"{guid}.jpg";
+
                     path = Path.Combine(
                         Directory.GetCurrentDirectory(),
                         "wwwroot\\images\\Products",
-                        view.ImageFile.FileName);
+                        file);
 
                     using(var stream = new FileStream(path, FileMode.Create))
                     {
                         await view.ImageFile.CopyToAsync(stream);
                     }
 
-                    path = $"~/images/Products/{view.ImageFile.FileName}";
+                    path = $"~/images/Products/{file}";
                 }
 
                 var product = this.ToProduct(view, path);
@@ -157,17 +160,26 @@ namespace Store.Web.Controllers
 
                     if (view.ImageFile != null && view.ImageFile.Length > 0)
                     {
-                        path = Path.Combine(
-                            Directory.GetCurrentDirectory(),
-                            "wwwroot\\images\\Products",
-                            view.ImageFile.FileName);
+                        path = string.Empty;
 
-                        using (var stream = new FileStream(path, FileMode.Create))
+                        if (view.ImageFile != null && view.ImageFile.Length > 0)
                         {
-                            await view.ImageFile.CopyToAsync(stream);
+                            var guid = Guid.NewGuid().ToString();
+                            var file = $"{guid}.jpg";
+
+                            path = Path.Combine(
+                                Directory.GetCurrentDirectory(),
+                                "wwwroot\\images\\Products",
+                                file);
+
+                            using (var stream = new FileStream(path, FileMode.Create))
+                            {
+                                await view.ImageFile.CopyToAsync(stream);
+                            }
+
+                            path = $"~/images/Products/{file}";
                         }
 
-                        path = $"~/images/Products/{view.ImageFile.FileName}";
                     }
 
                     var product = this.ToProduct(view, path);
